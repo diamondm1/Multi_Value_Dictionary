@@ -12,7 +12,7 @@ namespace Multi_Value_Dictionary
             do
             {
 
-                var inputs = Console.ReadLine().Split("");
+                var inputs = Console.ReadLine().Split(" ");
                 string command = "";
                 string key = "";
                 string member = "";
@@ -73,8 +73,7 @@ namespace Multi_Value_Dictionary
                 }
 
             }
-            while (Console.ReadLine().ToUpper() != "EXIT");
-            Console.WriteLine("Hello World!");
+            while (true);
         }
     }
 }
