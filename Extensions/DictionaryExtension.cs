@@ -17,11 +17,15 @@ namespace Multi_Value_Dictionary.Extensions
         /// <param name="member"></param>
         public static void Add(this Dictionary<string, List<string>> dict, string key, string member)
         {
-            if(dict.ContainsKey(key))
+            if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(member))
+            {
+                Console.WriteLine("ERROR, key or member must not be empty.");
+            }
+            else if (dict.ContainsKey(key))
             {
                 var members = dict[key];
 
-                if(!members.Contains(member))
+                if (!members.Contains(member))
                 {
                     members.Add(member);
                     Console.WriteLine("Added");
@@ -33,7 +37,7 @@ namespace Multi_Value_Dictionary.Extensions
             }
             else
             {
-                dict.Add(key, member);
+                dict.Add(key, new List<string>() { member });
                 Console.WriteLine("Added");
             }
         }
@@ -44,9 +48,9 @@ namespace Multi_Value_Dictionary.Extensions
         /// <param name="dict"></param>
         public static void Keys(this Dictionary<string, List<string>> dict)
         {
-            if(dict.Any())
+            if (dict.Any())
             {
-                foreach(var item in dict.Select((s,i) => new { Value = s, Index = i }))
+                foreach (var item in dict.Select((s, i) => new { Value = s, Index = i + 1 }))
                 {
                     Console.WriteLine($"{item.Index}) {item.Value.Key}");
                 }
@@ -64,10 +68,14 @@ namespace Multi_Value_Dictionary.Extensions
         /// <param name="key"></param>
         public static void Members(this Dictionary<string, List<string>> dict, string key)
         {
-            if(dict.ContainsKey(key))
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                Console.WriteLine("ERROR, please provide a key");
+            }
+            else if (dict.ContainsKey(key))
             {
                 var members = dict[key];
-                foreach (var member in members.Select((m, i) => new { Value = m, Index = i }))
+                foreach (var member in members.Select((m, i) => new { Value = m, Index = i + 1 }))
                 {
                     Console.WriteLine($"{member.Index}) {member.Value}");
                 }
@@ -106,12 +114,20 @@ namespace Multi_Value_Dictionary.Extensions
         /// <param name="member"></param>
         public static void Remove(this Dictionary<string, List<string>> dict, string key, string member)
         {
-            if(dict.ContainsKey(key))
+            if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(member))
+            {
+                Console.WriteLine("ERROR, key or member must not be empty.");
+            }
+            else if (dict.ContainsKey(key))
             {
                 var members = dict[key];
-                if(members.Contains(member))
+                if (members.Contains(member))
                 {
                     members.Remove(member);
+                    if (members.Count == 0)
+                    {
+                        dict.Remove(key);
+                    }
                     Console.WriteLine("Removed");
                 }
                 else
@@ -132,7 +148,11 @@ namespace Multi_Value_Dictionary.Extensions
         /// <param name="key"></param>
         public static void RemoveAll(this Dictionary<string, List<string>> dict, string key)
         {
-            if(dict.ContainsKey(key))
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                Console.WriteLine("ERROR, please provide a key");
+            }
+            else if (dict.ContainsKey(key))
             {
                 dict.Remove(key);
                 Console.WriteLine("Removed");
@@ -160,7 +180,14 @@ namespace Multi_Value_Dictionary.Extensions
         /// <param name="key"></param>
         public static void KeyExists(this Dictionary<string, List<string>> dict, string key)
         {
-            Console.WriteLine($"{dict.ContainsKey(key)}");
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                Console.WriteLine("ERROR, please provide a key");
+            }
+            else
+            {
+                Console.WriteLine($"{dict.ContainsKey(key)}");
+            }
         }
 
         /// <summary>
@@ -171,7 +198,11 @@ namespace Multi_Value_Dictionary.Extensions
         /// <param name="member"></param>
         public static void MemberExists(this Dictionary<string, List<string>> dict, string key, string member)
         {
-            if(dict.ContainsKey(key))
+            if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(member))
+            {
+                Console.WriteLine("ERROR, key or member must not be empty.");
+            }
+            else if (dict.ContainsKey(key))
             {
                 var members = dict[key];
                 Console.WriteLine($"{members.Contains(member)}");
@@ -193,7 +224,7 @@ namespace Multi_Value_Dictionary.Extensions
             {
                 foreach (var entry in dict)
                 {
-                    foreach(var item in entry.Value)
+                    foreach (var item in entry.Value)
                     {
                         Console.WriteLine($"{index}) {entry.Key}: {item}");
                         index++;
